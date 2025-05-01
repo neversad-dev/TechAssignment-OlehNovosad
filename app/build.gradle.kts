@@ -34,8 +34,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.login)
-    implementation(projects.feature.home)
+    implementation(projects.feature.pinpad)
+    implementation(projects.feature.receipt)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

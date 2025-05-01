@@ -16,10 +16,10 @@ internal class FakeTransactionApi @Inject constructor(
 ) : TransactionApi {
 
     override suspend fun performTransaction(amount: Double): Result<Transaction> {
-        return executeRequest {
+        return executeRequest<TransactionDto> {
             client.get(FAKE_TRANSACTION_URL)
         }
-//            .map { it.toTransaction() }
+            .map { it.toTransaction() }
 
     }
 }

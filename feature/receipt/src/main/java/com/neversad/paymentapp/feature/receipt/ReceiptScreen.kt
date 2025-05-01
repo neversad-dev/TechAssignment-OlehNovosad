@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.model.Transaction
+import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,6 +50,8 @@ fun ReceiptScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
+        contentWindowInsets = WindowInsets.safeDrawing,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -172,19 +175,21 @@ private fun formatCurrency(amount: Double): String {
 @Preview(showBackground = true)
 @Composable
 fun ReceiptPreview() {
-    ReceiptScreen(
-        state = ReceiptState.Success(
-            Transaction(
-                id = "123",
-                status = Transaction.Status.SUCCESS,
-                purchaseAmount = "100.00",
-                taxableAmount = "100.00",
-                taxRate = "10.00",
-                tipAmount = "15.00",
-                discountAmount = "5.00",
-                timestamp = "2024-03-20T10:30:00Z"
-            )
-        ),
-        onAction = {}
-    )
+    PaymentAppTheme {
+        ReceiptScreen(
+            state = ReceiptState.Success(
+                Transaction(
+                    id = "123",
+                    status = Transaction.Status.SUCCESS,
+                    purchaseAmount = "100.00",
+                    taxableAmount = "100.00",
+                    taxRate = "10.00",
+                    tipAmount = "15.00",
+                    discountAmount = "5.00",
+                    timestamp = "2024-03-20T10:30:00Z"
+                )
+            ),
+            onAction = {}
+        )
+    }
 }

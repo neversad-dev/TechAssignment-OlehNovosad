@@ -1,4 +1,4 @@
-package com.neversad.paymentapp.ui.theme
+package com.neversad.paymentapp.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

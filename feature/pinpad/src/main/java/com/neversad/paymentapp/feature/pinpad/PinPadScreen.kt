@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.domain.common.Failure
+import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
+
 
 @Composable
 fun PinPadRoute(
@@ -63,6 +65,8 @@ fun PinPadScreen(
     }
 
     Scaffold(
+        modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
+        contentWindowInsets = WindowInsets.safeDrawing,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(
@@ -83,10 +87,7 @@ fun PinPadScreen(
                 ) {
                     Text(
                         text = "Purchase",
-                        style = MaterialTheme.typography.headlineLarge.copy(
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFF2C2C2C)
-                        )
+                        style = MaterialTheme.typography.headlineLarge
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -114,8 +115,7 @@ fun PinPadScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 16.dp),
                             textAlign = TextAlign.Center,
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Normal,
+                            style = MaterialTheme.typography.headlineLarge,
                             color = Color(0xFF2C2C2C)
                         )
                     }
@@ -254,8 +254,10 @@ private fun String.toAmountFormat(): String {
 @Composable
 @Preview(showBackground = true)
 fun PinPadScreenPreview() {
-    PinPadScreen(
-        state = PinPadState(),
-        onAction = {}
-    )
+    PaymentAppTheme {
+        PinPadScreen(
+            state = PinPadState(),
+            onAction = {}
+        )
+    }
 }

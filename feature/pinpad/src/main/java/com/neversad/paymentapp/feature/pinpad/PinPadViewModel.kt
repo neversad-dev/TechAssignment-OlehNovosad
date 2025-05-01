@@ -75,11 +75,12 @@ class PinPadViewModel @Inject constructor(
             viewModelScope.launch {
                 _state.update { it.copy(isLoading = true, failure = null) }
 
-                val amount = _state.value.amount.toDoubleOrNull() ?: 0.0
+                val amount = _state.value.amount
                 transactionRepository.performTransaction(amount)
                     .onSuccess { transaction ->
                         _state.update {
                             it.copy(
+                                amount = "",
                                 isLoading = false,
                             )
                         }

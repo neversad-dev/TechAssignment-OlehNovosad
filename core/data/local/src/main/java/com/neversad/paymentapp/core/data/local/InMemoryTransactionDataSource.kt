@@ -7,7 +7,6 @@ import com.neversad.paymentapp.core.model.Transaction
 import jakarta.inject.Inject
 
 
-data object TransactionNotFound : Failure.Data()
 
 internal class InMemoryTransactionDataSource @Inject constructor() : TransactionDataSource {
 
@@ -23,7 +22,7 @@ internal class InMemoryTransactionDataSource @Inject constructor() : Transaction
         return if (result != null) {
             Result.Success(result)
         } else {
-            Result.Failure(TransactionNotFound)
+            Result.Failure(DataFailure.NotFound)
         }
     }
 }

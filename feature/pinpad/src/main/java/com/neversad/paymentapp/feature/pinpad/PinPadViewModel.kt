@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+object InvalidAmount : Failure("Invalid amount")
 
 data class PinPadState(
     val isLoading: Boolean = false,
@@ -28,6 +29,7 @@ data class PinPadState(
 sealed interface PinPadAction {
     data class EnterDigit(val digit: String) : PinPadAction
     data object Submit : PinPadAction
+    data object ClearFailure : PinPadAction
 }
 
 sealed interface PinPadEffect {
@@ -49,6 +51,7 @@ class PinPadViewModel @Inject constructor(
         when (action) {
             is PinPadAction.EnterDigit -> handleDigitEntered(action.digit)
             is PinPadAction.Submit -> handleSubmit()
+            is PinPadAction.ClearFailure -> clearFailure()
         }
     }
 
@@ -65,27 +68,39 @@ class PinPadViewModel @Inject constructor(
     }
 
     private fun handleSubmit() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, failure = null) }
 
-            val amount = _state.value.amount.toDoubleOrNull() ?: 0.0
-            transactionRepository.performTransaction(amount)
-                .onSuccess { transaction ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            transaction = transaction
-                        )
+        if (!_state.value.isAmountValid) {
+            _state.update { it.copy(failure = InvalidAmount) }
+            return
+        } else {
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true, failure = null) }
+
+                val amount = _state.value.amount.toDoubleOrNull() ?: 0.0
+                transactionRepository.performTransaction(amount)
+                    .onSuccess { transaction ->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                transaction = transaction
+                            )
+                        }
                     }
-                }
-                .onFailure { failure ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            failure = failure
-                        )
+                    .onFailure { failure ->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                failure = failure
+                            )
+                        }
                     }
-                }
+            }
+        }
+    }
+
+    private fun clearFailure() {
+        viewModelScope.launch {
+            _state.update { it.copy(failure = null) }
         }
     }
 }

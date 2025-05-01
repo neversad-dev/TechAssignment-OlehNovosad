@@ -17,9 +17,9 @@ suspend inline fun <reified T> executeRequest(
     val response = try {
         request()
     } catch (e: SocketTimeoutException) {
-        return Result.Failure(Failure.Network.Timeout)
+        return Result.Failure(NetworkFailure.Timeout)
     } catch (e: UnresolvedAddressException) {
-        return Result.Failure(Failure.Network.ConnectionLost)
+        return Result.Failure(NetworkFailure.ConnectionLost)
     } catch (e: Exception) {
         coroutineContext.ensureActive()
         return Result.Failure(Failure.Unknown)
@@ -36,11 +36,11 @@ suspend inline fun <reified T> parseResponse(
             try {
                 Result.Success(response.body<T>())
             } catch (e: Exception) {
-                Result.Failure(Failure.Data.InvalidFormat)
+                Result.Failure(NetworkFailure.InvalidFormat)
             }
         }
-        408 -> Result.Failure(Failure.Network.Timeout)
-        in 500..599 -> Result.Failure(Failure.Network.ServerUnavailable)
-        else -> Result.Failure(Failure.Data.UnexpectedResponse)
+        408 -> Result.Failure(NetworkFailure.Timeout)
+        in 500..599 -> Result.Failure(NetworkFailure.ServerUnavailable)
+        else -> Result.Failure(Failure.Unknown)
     }
 }

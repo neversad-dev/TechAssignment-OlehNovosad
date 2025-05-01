@@ -13,8 +13,8 @@ fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
     navigate(Login, navOptions)
 }
 
-fun NavGraphBuilder.loginScreen(navigateToHome: (String) -> Unit) {
+fun NavGraphBuilder.loginScreen(navigateToPinPad: (String) -> Unit) {
     composable<Login> {
-        LoginRoute(navigateToHome)
+        LoginRoute(navigateToPinPad)
     }
 }

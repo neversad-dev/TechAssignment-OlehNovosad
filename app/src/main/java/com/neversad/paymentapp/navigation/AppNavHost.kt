@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.neversad.paymentapp.feature.pinpad.homeScreen
-import com.neversad.paymentapp.feature.pinpad.navigateToHome
+import com.neversad.paymentapp.feature.pinpad.pinPadScreen
+import com.neversad.paymentapp.feature.pinpad.navigateToPinPad
 import com.neversad.paymentapp.feature.receipt.Login
 import com.neversad.paymentapp.feature.receipt.loginScreen
 import kotlin.reflect.KClass
@@ -21,7 +21,7 @@ fun AppNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        homeScreen()
-        loginScreen(navigateToHome = navController::navigateToHome)
+        pinPadScreen()
+        loginScreen(navigateToPinPad = navController::navigateToPinPad)
     }
 }

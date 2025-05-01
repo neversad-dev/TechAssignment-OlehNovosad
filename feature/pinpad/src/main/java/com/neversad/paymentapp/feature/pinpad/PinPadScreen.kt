@@ -11,15 +11,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun HomeRoute(userId: String) {
-    HomeScreen(userId = userId)
+fun PinPadRoute(userId: String) {
+    PinPadScreen(userId = userId)
 }
 
 @Composable
-fun HomeScreen(userId: String) {
+fun PinPadScreen(userId: String) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "Welcome to Home Screen\nUser ID: $userId",
+            text = "Welcome to PinPad Screen\nUser ID: $userId",
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
@@ -28,6 +28,6 @@ fun HomeScreen(userId: String) {
 
 @Composable
 @Preview(showBackground = true)
-fun HomeScreenPreview() {
-    HomeScreen("123")
+fun PinPadScreenPreview() {
+    PinPadScreen("123")
 }

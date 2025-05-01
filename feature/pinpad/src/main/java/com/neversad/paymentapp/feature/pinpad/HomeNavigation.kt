@@ -8,16 +8,16 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Home(val userId: String)
+data class PinPad(val userId: String)
 
-fun NavController.navigateToHome(userId: String, navOptions: NavOptions? = null) {
-    navigate(Home(userId), navOptions)  // Type safe navigation
+fun NavController.navigateToPinPad(userId: String, navOptions: NavOptions? = null) {
+    navigate(PinPad(userId), navOptions)  // Type safe navigation
 }
 
-fun NavGraphBuilder.homeScreen() {
-    composable<Home> {
+fun NavGraphBuilder.pinPadScreen() {
+    composable<PinPad> {
         // Using savedStateHandle in VM can be better
-        val userId = it.toRoute<Home>().userId  // Type safe access
-        HomeRoute(userId)
+        val userId = it.toRoute<PinPad>().userId  // Type safe access
+        PinPadRoute(userId)
     }
 }

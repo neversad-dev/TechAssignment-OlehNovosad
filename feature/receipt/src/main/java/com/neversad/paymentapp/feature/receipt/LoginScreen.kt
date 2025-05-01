@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun LoginRoute(navigateToHome: (userId: String) -> Unit) {
+fun LoginRoute(navigateToPinPad: (userId: String) -> Unit) {
     LoginScreen {
-        navigateToHome("123")
+        navigateToPinPad("123")
     }
 }
 
@@ -20,7 +20,7 @@ fun LoginRoute(navigateToHome: (userId: String) -> Unit) {
 fun LoginScreen(onClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         OutlinedButton(onClick = onClick) {
-            Text(text = "Navigate to Home")
+            Text(text = "Navigate to PinPad")
         }
     }
 }

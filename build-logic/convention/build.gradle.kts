@@ -34,27 +34,27 @@ tasks {
 gradlePlugin {
     plugins {
         register("androidApplicationCompose") {
-            id = "starter.android.application.compose"
+            id = "paymentapp.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
         register("androidApplication") {
-            id = "starter.android.application"
+            id = "paymentapp.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
         register("androidLibraryCompose") {
-            id = "starter.android.library.compose"
+            id = "paymentapp.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
         register("androidLibrary") {
-            id = "starter.android.library"
+            id = "paymentapp.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidFeature") {
-            id = "starter.android.feature"
+            id = "paymentapp.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
         register("androidHilt") {
-            id = "starter.android.hilt"
+            id = "paymentapp.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
     }

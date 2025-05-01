@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.starter.android.feature)
-    alias(libs.plugins.starter.android.library.compose)
+    alias(libs.plugins.paymentapp.android.feature)
+    alias(libs.plugins.paymentapp.android.library.compose)
 }
 
 android {

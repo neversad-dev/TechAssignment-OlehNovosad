@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.starter.android.library)
+    alias(libs.plugins.paymentapp.android.library)
 }
 
 android {

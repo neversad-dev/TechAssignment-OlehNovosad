@@ -1,19 +1,19 @@
 [versions]
-androidGradlePlugin = "8.9.1"
-androidTools = "31.4.0"
-androidxActivity = "1.9.0"
-androidxComposeBom = "2024.05.00"
+androidGradlePlugin = "8.9.2"
+androidTools = "31.9.2"
+androidxActivity = "1.10.1"
+androidxComposeBom = "2025.04.01"
 androidxComposeCompiler = "1.5.12"  # Compose VC
-androidxLifecycle = "2.8.0"
-androidxNavigation = "2.8.0-beta01"
+androidxLifecycle = "2.8.7"
+androidxNavigation = "2.8.9"
 baseJunit = "4.13.2"
-coreKtxVersion = "1.13.1"
-espressoCore = "3.5.1"
-hilt = "2.51.1"
-junit = "1.1.5"
-kotlin = "1.9.23"
-kotlinxSerializationJson = "1.6.3"
-ksp = "1.9.23-1.0.20"
+coreKtxVersion = "1.16.0"
+espressoCore = "3.6.1"
+hilt = "2.56"
+junit = "1.2.1"
+kotlin = "2.1.20"
+kotlinxSerializationJson = "1.8.0"
+ksp = "2.1.20-1.0.31"
 
 [libraries]
 # Compose
@@ -60,6 +60,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 # Plugins defined by this project
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

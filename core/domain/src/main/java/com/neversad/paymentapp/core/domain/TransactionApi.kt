@@ -4,5 +4,5 @@ import com.neversad.paymentapp.core.model.Transaction
 
 interface TransactionApi {
 
-    fun performTransaction(amount: Double): Transaction
+    suspend fun performTransaction(amount: Double): Transaction
 }

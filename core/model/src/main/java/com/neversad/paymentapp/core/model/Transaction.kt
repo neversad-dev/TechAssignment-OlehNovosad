@@ -1,18 +1,19 @@
 package com.neversad.paymentapp.core.model
 
-enum class TransactionStatus{
-    SUCCESS,
-    FAILED
-}
 
-data class Transaction (
+data class Transaction(
     val id: String,
-    val status: TransactionStatus,
-    val purchaseAmount: Double,
-    val taxableAmount: Double,
-    val taxRate: Double,
-    val tipAmount: Double,
-    val discountAmount: Double,
-    val timestamp: Long,
-)
+    val status: Status,
+    val purchaseAmount: String,
+    val taxableAmount: String,
+    val taxRate: String,
+    val tipAmount: String,
+    val discountAmount: String,
+    val timestamp: String,
+) {
+    enum class Status {
+        SUCCESS,
+        FAILED
+    }
+}
 

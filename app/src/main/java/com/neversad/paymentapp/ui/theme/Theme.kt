@@ -11,15 +11,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = com.neversad.paymentapp.ui.theme.Purple80,
-    secondary = com.neversad.paymentapp.ui.theme.PurpleGrey80,
-    tertiary = com.neversad.paymentapp.ui.theme.Pink80
+    primary = Purple80,
+    secondary = PurpleGrey80,
+    tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = com.neversad.paymentapp.ui.theme.Purple40,
-    secondary = com.neversad.paymentapp.ui.theme.PurpleGrey40,
-    tertiary = com.neversad.paymentapp.ui.theme.Pink40
+    primary = Purple40,
+    secondary = PurpleGrey40,
+    tertiary = Pink40
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -51,7 +51,7 @@ fun PaymentAppTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = com.neversad.paymentapp.ui.theme.Typography,
+        typography = Typography,
         content = content
     )
 }

@@ -81,8 +81,11 @@ fun ReceiptScreen(
                     LaunchedEffect(snackbarHostState) {
                         snackbarHostState.showSnackbar(
                             message = state.failure.message,
-                            duration = SnackbarDuration.Short
-                        )
+                            duration = SnackbarDuration.Indefinite,
+                            withDismissAction = true
+                        ).also {
+                            onAction(ReceiptAction.NavigateBack)
+                        }
                     }
                 }
             }

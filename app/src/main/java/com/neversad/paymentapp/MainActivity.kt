@@ -9,14 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.neversad.paymentapp.navigation.AppNavHost
-import com.neversad.paymentapp.ui.theme.StarterTheme
+import com.neversad.paymentapp.ui.theme.PaymentAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            StarterTheme {
+            PaymentAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     AppNavHost(modifier = Modifier.padding(innerPadding))
                 }

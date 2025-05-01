@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -20,4 +21,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "PaymentApp"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
+include(":core:model")
+include(":feature:pinpad")
+include(":feature:receipt")
+include(":core:data")
+include(":core:common")

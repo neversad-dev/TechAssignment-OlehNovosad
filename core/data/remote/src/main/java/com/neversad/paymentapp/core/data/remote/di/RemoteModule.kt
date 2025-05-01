@@ -1,12 +1,8 @@
 package com.neversad.paymentapp.core.data.remote.di
 
-import android.net.http.HttpResponseCache.install
-import android.util.Log
 import com.neversad.paymentapp.core.data.remote.FakeTransactionApi
 import com.neversad.paymentapp.core.data.remote.HttpClientFactory
-import com.neversad.paymentapp.core.domain.TransactionApi
-import com.neversad.paymentapp.core.domain.TransactionRepository
-import dagger.Binds
+import com.neversad.paymentapp.core.domain.transaction.TransactionApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

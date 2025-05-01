@@ -1,18 +1,29 @@
 package com.neversad.paymentapp.core.data.local
 
-import com.neversad.paymentapp.core.domain.TransactionDataSource
+import com.neversad.paymentapp.core.domain.common.Failure
+import com.neversad.paymentapp.core.domain.common.Result
+import com.neversad.paymentapp.core.domain.transaction.TransactionDataSource
 import com.neversad.paymentapp.core.model.Transaction
 import jakarta.inject.Inject
 
- class InMemoryTransactionDataSource @Inject constructor() : TransactionDataSource {
+
+data object TransactionNotFound : Failure.Data()
+
+internal class InMemoryTransactionDataSource @Inject constructor() : TransactionDataSource {
 
     private val transactions = mutableListOf<Transaction>()
 
-    override fun saveTransaction(transaction: Transaction) {
+    override suspend fun saveTransaction(transaction: Transaction): Result<Transaction> {
         transactions.add(transaction)
+        return Result.Success(transaction)
     }
 
-    override fun getTransactionById(id: String): Transaction? {
-        return transactions.find { it.id == id }
+    override suspend fun getTransactionById(id: String): Result<Transaction> {
+        val result = transactions.find { it.id == id }
+        return if (result != null) {
+            Result.Success(result)
+        } else {
+            Result.Failure(TransactionNotFound)
+        }
     }
 }

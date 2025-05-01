@@ -23,7 +23,6 @@ data class PinPadState(
     val failure: Failure? = null,
     val amount: String = "",
     val isAmountValid: Boolean = false,
-    val transaction: Transaction? = null
 )
 
 sealed interface PinPadAction {
@@ -33,7 +32,7 @@ sealed interface PinPadAction {
 }
 
 sealed interface PinPadEffect {
-    data object NavigateToReceipt : PinPadEffect
+    data class NavigateToReceipt(val transactionId: String) : PinPadEffect
 }
 
 @HiltViewModel
@@ -82,9 +81,9 @@ class PinPadViewModel @Inject constructor(
                         _state.update {
                             it.copy(
                                 isLoading = false,
-                                transaction = transaction
                             )
                         }
+                        _effect.emit(PinPadEffect.NavigateToReceipt(transaction.id))
                     }
                     .onFailure { failure ->
                         _state.update {

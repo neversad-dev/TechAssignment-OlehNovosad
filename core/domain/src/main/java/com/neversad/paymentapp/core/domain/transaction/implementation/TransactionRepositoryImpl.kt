@@ -19,4 +19,8 @@ internal class TransactionRepositoryImpl @Inject constructor(
                 transactionDataSource.saveTransaction(it)
             }
     }
+
+    override suspend fun getTransaction(transactionId: String): Result<Transaction> {
+        return transactionDataSource.getTransactionById(transactionId)
+    }
 }

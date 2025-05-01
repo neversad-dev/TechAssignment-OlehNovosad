@@ -6,4 +6,6 @@ import com.neversad.paymentapp.core.model.Transaction
 interface TransactionRepository {
 
      suspend fun performTransaction(amount: Double): Result<Transaction>
+
+     suspend fun getTransaction(transactionId: String): Result<Transaction>
 }

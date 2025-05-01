@@ -25,6 +25,6 @@ fun AppNavHost(
         startDestination = startDestination
     ) {
         pinPadScreen(navigateToReceipt = navController::navigateToReceipt)
-        receiptScreen()
+        receiptScreen(onNavigateBack = navController::popBackStack)
     }
 }

@@ -15,7 +15,7 @@ internal class FakeTransactionApi @Inject constructor(
     private val client: HttpClient
 ) : TransactionApi {
 
-    override suspend fun performTransaction(amount: Double): Result<Transaction> {
+  override suspend fun performTransaction(amount: String): Result<Transaction> {
         return executeRequest<TransactionDto> {
             client.get(FAKE_TRANSACTION_URL)
         }

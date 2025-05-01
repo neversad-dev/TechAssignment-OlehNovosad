@@ -14,7 +14,7 @@ fun NavController.navigateToPinPad(navOptions: NavOptions? = null) {
     navigate(PinPad, navOptions)  // Type safe navigation
 }
 
-fun NavGraphBuilder.pinPadScreen(navigateToReceipt: () -> Unit) {
+fun NavGraphBuilder.pinPadScreen(navigateToReceipt: (String) -> Unit) {
     composable<PinPad> {
         // Using savedStateHandle in VM can be better
         PinPadRoute(navigateToReceipt)

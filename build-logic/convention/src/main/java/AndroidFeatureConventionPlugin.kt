@@ -18,6 +18,9 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 // Define common dependencies for feature modules
                 implementation(libs.findLibrary("androidx-navigation-compose").get())
                 implementation(libs.findLibrary("kotlinx-serialization-json").get())
+                implementation(libs.findLibrary("androidx-hilt-navigation-compose").get())
+                implementation(libs.findLibrary("androidx-lifecycle-viewModelCompose").get())
+                implementation(libs.findLibrary("androidx-lifecycle-runtimeCompose").get())
             }
         }
     }

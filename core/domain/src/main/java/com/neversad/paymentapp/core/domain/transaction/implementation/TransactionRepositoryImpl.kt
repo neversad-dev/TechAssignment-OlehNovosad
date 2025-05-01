@@ -12,11 +12,15 @@ internal class TransactionRepositoryImpl @Inject constructor(
     private val transactionDataSource: TransactionDataSource
 ) : TransactionRepository {
 
-    override suspend fun performTransaction(amount: Double): Result<Transaction> {
+    override suspend fun performTransaction(amount: String): Result<Transaction> {
         return transactionApi
             .performTransaction(amount)
             .flatMap {
                 transactionDataSource.saveTransaction(it)
             }
+    }
+
+    override suspend fun getTransaction(transactionId: String): Result<Transaction> {
+        return transactionDataSource.getTransactionById(transactionId)
     }
 }

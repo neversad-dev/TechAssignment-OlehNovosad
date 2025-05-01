@@ -21,15 +21,18 @@ import com.neversad.paymentapp.core.domain.common.Failure
 
 @Composable
 fun PinPadRoute(
-    navigateToReceipt: () -> Unit,
+    navigateToReceipt: (String) -> Unit,
     viewModel: PinPadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val effect by viewModel.effect.collectAsStateWithLifecycle(null)
 
     LaunchedEffect(effect) {
-        when (effect) {
-            is PinPadEffect.NavigateToReceipt -> navigateToReceipt()
+        when (val navigateToReceiptEffect = effect) {
+            is PinPadEffect.NavigateToReceipt -> {
+                navigateToReceipt(navigateToReceiptEffect.transactionId)
+            }
+
             null -> {}
         }
     }
@@ -46,7 +49,7 @@ fun PinPadScreen(
     onAction: (PinPadAction) -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    
+
     LaunchedEffect(state.failure) {
         state.failure?.let { failure ->
             snackbarHostState.showSnackbar(
@@ -85,9 +88,9 @@ fun PinPadScreen(
                             color = Color(0xFF2C2C2C)
                         )
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
                         text = "Please enter amount.",
                         style = MaterialTheme.typography.bodyLarge.copy(
@@ -165,9 +168,9 @@ fun PinPadScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Spacer(
-                            modifier =Modifier.size(72.dp)
+                            modifier = Modifier.size(72.dp)
                         )
-                        
+
                         NumberButton(
                             number = "0",
                             onClick = { onAction(PinPadAction.EnterDigit("0")) }

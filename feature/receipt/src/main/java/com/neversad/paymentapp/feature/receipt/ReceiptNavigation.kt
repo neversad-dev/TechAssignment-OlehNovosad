@@ -1,5 +1,6 @@
 package com.neversad.paymentapp.feature.receipt
 
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -7,14 +8,19 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-object Receipt
+data class Receipt(val transactionId: String)
 
-fun NavController.navigateToReceipt(navOptions: NavOptions? = null) {
-    navigate(Receipt, navOptions)
+fun NavController.navigateToReceipt(
+    transactionId: String,
+    navOptions: NavOptions? = null
+) {
+    navigate(Receipt(transactionId), navOptions)
 }
 
-fun NavGraphBuilder.receiptScreen() {
+fun NavGraphBuilder.receiptScreen(
+    onNavigateBack: () -> Unit,
+) {
     composable<Receipt> {
-        ReceiptRoute()
+        ReceiptRoute(onNavigateBack)
     }
 }

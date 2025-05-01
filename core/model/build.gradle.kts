@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.starter.core.model"
+    namespace = "com.neversad.paymentapp.core.model"
 }
 
 dependencies {

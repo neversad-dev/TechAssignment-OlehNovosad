@@ -1,4 +1,4 @@
-import com.example.starter.build_logic.convention.implementation
+import com.neversad.paymentapp.build_logic.convention.implementation
 
 plugins {
     alias(libs.plugins.starter.android.application)
@@ -7,10 +7,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.starter"
+    namespace = "com.neversad.paymentapp"
 
     defaultConfig {
-        applicationId = "com.example.starter"
+        applicationId = "com.neversad.paymentapp"
         versionCode = 1
         versionName = "0.0.1"
 

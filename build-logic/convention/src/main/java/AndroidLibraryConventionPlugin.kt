@@ -1,6 +1,6 @@
 import com.android.build.gradle.LibraryExtension
-import com.example.starter.build_logic.convention.configureKotlinAndroid
-import com.example.starter.build_logic.convention.testImplementation
+import com.neversad.paymentapp.build_logic.convention.configureKotlinAndroid
+import com.neversad.paymentapp.build_logic.convention.testImplementation
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

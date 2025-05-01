@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.starter.feature.login"
+    namespace = "com.neversad.paymentapp.feature.login"
 
 }
 

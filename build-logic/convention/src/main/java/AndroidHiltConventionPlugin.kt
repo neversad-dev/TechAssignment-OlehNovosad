@@ -1,5 +1,5 @@
-import com.example.starter.build_logic.convention.implementation
-import com.example.starter.build_logic.convention.libs
+import com.neversad.paymentapp.build_logic.convention.implementation
+import com.neversad.paymentapp.build_logic.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies

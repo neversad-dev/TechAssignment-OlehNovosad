@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.starter.core.common"
+    namespace = "com.neversad.paymentapp.core.common"
 
 }
 

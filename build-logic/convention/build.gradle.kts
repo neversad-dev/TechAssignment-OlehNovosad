@@ -4,7 +4,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.example.starter.build_logic.convention"
+group = "com.neversad.paymentapp.build_logic.convention"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

@@ -7,14 +7,14 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-object Login
+object Receipt
 
-fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
-    navigate(Login, navOptions)
+fun NavController.navigateToReceipt(navOptions: NavOptions? = null) {
+    navigate(Receipt, navOptions)
 }
 
-fun NavGraphBuilder.loginScreen(navigateToPinPad: (String) -> Unit) {
-    composable<Login> {
-        LoginRoute(navigateToPinPad)
+fun NavGraphBuilder.receiptScreen(navigateToPinPad: (String) -> Unit) {
+    composable<Receipt> {
+        ReceiptRoute(navigateToPinPad)
     }
 }

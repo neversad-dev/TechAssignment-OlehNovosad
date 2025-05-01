@@ -2,6 +2,7 @@ package com.neversad.paymentapp.feature.pinpad
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,23 +12,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PinPadRoute(userId: String) {
-    PinPadScreen(userId = userId)
+fun PinPadRoute(navigateToReceipt: () -> Unit) {
+    PinPadScreen {
+        navigateToReceipt()
+    }
 }
 
 @Composable
-fun PinPadScreen(userId: String) {
+fun PinPadScreen(onClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(
-            text = "Welcome to PinPad Screen\nUser ID: $userId",
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
-        )
+        Button(onClick = onClick) {
+            Text("OK")
+        }
     }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun PinPadScreenPreview() {
-    PinPadScreen("123")
+    PinPadScreen {}
 }

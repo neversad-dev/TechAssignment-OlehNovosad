@@ -13,8 +13,8 @@ fun NavController.navigateToReceipt(navOptions: NavOptions? = null) {
     navigate(Receipt, navOptions)
 }
 
-fun NavGraphBuilder.receiptScreen(navigateToPinPad: (String) -> Unit) {
+fun NavGraphBuilder.receiptScreen() {
     composable<Receipt> {
-        ReceiptRoute(navigateToPinPad)
+        ReceiptRoute()
     }
 }

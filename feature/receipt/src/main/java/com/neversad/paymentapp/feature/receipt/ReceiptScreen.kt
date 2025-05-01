@@ -10,23 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ReceiptRoute(navigateToPinPad: (userId: String) -> Unit) {
-    ReceiptScreen {
-        navigateToPinPad("123")
-    }
+fun ReceiptRoute() {
+    ReceiptScreen()
 }
 
 @Composable
-fun ReceiptScreen(onClick: () -> Unit) {
+fun ReceiptScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        OutlinedButton(onClick = onClick) {
-            Text(text = "Navigate to PinPad")
-        }
+        Text(text = "Welcome to Receipt Screen")
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ReceiptPreview() {
-    ReceiptScreen {}
+    ReceiptScreen()
 }

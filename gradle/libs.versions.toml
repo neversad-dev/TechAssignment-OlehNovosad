@@ -15,6 +15,7 @@ junit = "1.2.1"
 kotlin = "2.1.20"
 kotlinxSerializationJson = "1.8.0"
 ksp = "2.1.20-1.0.31"
+jetbrainsKotlinJvm = "2.1.20"
 
 [libraries]
 # Compose
@@ -72,4 +73,5 @@ paymentapp-android-library = { id = "paymentapp.android.library", version = "uns
 paymentapp-android-library-compose = { id = "paymentapp.android.library.compose", version = "unspecified" }
 paymentapp-android-feature = { id = "paymentapp.android.feature", version = "unspecified" }
 paymentapp-android-hilt = { id = "paymentapp.android.hilt", version = "unspecified" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 # End

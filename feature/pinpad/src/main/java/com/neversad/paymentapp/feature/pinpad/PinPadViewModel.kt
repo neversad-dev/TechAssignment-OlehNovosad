@@ -45,12 +45,12 @@ class PinPadViewModel @Inject constructor(
 
     fun onAction(action: PinPadAction) {
         when (action) {
-            is PinPadAction.EnterDigit -> handlePinDigitEntered(action.digit)
-            is PinPadAction.Submit -> handlePinSubmitted()
+            is PinPadAction.EnterDigit -> handleDigitEntered(action.digit)
+            is PinPadAction.Submit -> handleSubmit()
         }
     }
 
-    private fun handlePinDigitEntered(digit: String) {
+    private fun handleDigitEntered(digit: String) {
         viewModelScope.launch {
             _state.update { currentState ->
                 val newAmount = currentState.amount + digit
@@ -62,7 +62,7 @@ class PinPadViewModel @Inject constructor(
         }
     }
 
-    private fun handlePinSubmitted() {
+    private fun handleSubmit() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
             

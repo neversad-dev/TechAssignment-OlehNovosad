@@ -1,21 +1,21 @@
-package com.neversad.paymentapp.core.data
+package com.neversad.paymentapp.core.data.remote
 
-import com.neversad.paymentapp.core.domain.TransactionRepository
+import com.neversad.paymentapp.core.domain.TransactionApi
 import com.neversad.paymentapp.core.model.Transaction
 import com.neversad.paymentapp.core.model.TransactionStatus
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
 
-class FakeTransactionRepository @Inject constructor() : TransactionRepository {
+internal class FakeTransactionApi @Inject constructor() : TransactionApi {
 
     override fun performTransaction(amount: Double): Transaction {
         // Simulate some processing time
 //        Thread.sleep(500)
-        
+
         // Generate a random success rate (90% success)
         val isSuccess = Random.nextDouble() < 0.9
-        
+
         return Transaction(
             id = UUID.randomUUID().toString(),
             status = if (isSuccess) TransactionStatus.SUCCESS else TransactionStatus.FAILED,

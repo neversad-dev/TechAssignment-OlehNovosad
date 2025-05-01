@@ -6,10 +6,10 @@ plugins {
 }
 
 android {
-    namespace = "com.neversad.paymentapp.core.data"
+    namespace = "com.neversad.paymentapp.core.data.local"
 }
 
 dependencies {
-    implementation(project(":core:domain"))
+    implementation(projects.core.domain)
 
 }

@@ -1,6 +1,6 @@
-package com.neversad.paymentapp.core.data.di
+package com.neversad.paymentapp.core.domain.internal.di
 
-import com.neversad.paymentapp.core.data.FakeTransactionRepository
+import com.neversad.paymentapp.core.domain.internal.TransactionRepositoryImpl
 import com.neversad.paymentapp.core.domain.TransactionRepository
 import dagger.Binds
 import dagger.Module
@@ -10,11 +10,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
+internal abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindTransactionRepository(
-        fakeTransactionRepository: FakeTransactionRepository
+     abstract fun bindTransactionRepository(
+        fakeTransactionRepository: TransactionRepositoryImpl
     ): TransactionRepository
 } 

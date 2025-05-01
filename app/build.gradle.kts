@@ -37,6 +37,9 @@ dependencies {
     implementation(projects.feature.pinpad)
     implementation(projects.feature.receipt)
 
+    implementation(projects.core.data.remote)
+    implementation(projects.core.data.local)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     testImplementation(libs.junit)

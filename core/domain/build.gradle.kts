@@ -1,4 +1,3 @@
-import com.neversad.paymentapp.build_logic.convention.implementation
 
 plugins {
     alias(libs.plugins.paymentapp.android.library)
@@ -6,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.neversad.paymentapp.core.data"
+    namespace = "com.neversad.paymentapp.core.domain"
 }
 
 dependencies {

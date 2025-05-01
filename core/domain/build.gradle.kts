@@ -10,6 +10,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
+    api(projects.core.model)
 
 }

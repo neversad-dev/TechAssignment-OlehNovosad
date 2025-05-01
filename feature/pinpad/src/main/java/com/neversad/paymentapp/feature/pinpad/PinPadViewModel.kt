@@ -2,6 +2,8 @@ package com.neversad.paymentapp.feature.pinpad
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.neversad.paymentapp.core.domain.TransactionRepository
+import com.neversad.paymentapp.core.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,8 @@ data class PinPadState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val amount: String = "",
-    val isAmountValid: Boolean = false
+    val isAmountValid: Boolean = false,
+    val transaction: Transaction? = null
 )
 
 sealed interface PinPadAction {
@@ -30,9 +33,9 @@ sealed interface PinPadEffect {
 }
 
 @HiltViewModel
-class PinPadViewModel @Inject constructor() : ViewModel() {
-
-
+class PinPadViewModel @Inject constructor(
+    private val transactionRepository: TransactionRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(PinPadState())
     val state: StateFlow<PinPadState> = _state.asStateFlow()
@@ -61,10 +64,24 @@ class PinPadViewModel @Inject constructor() : ViewModel() {
 
     private fun handlePinSubmitted() {
         viewModelScope.launch {
-            if (_state.value.isAmountValid) {
+            _state.update { it.copy(isLoading = true, error = null) }
+            
+            try {
+                val amount = _state.value.amount.toDoubleOrNull() ?: 0.0
+                val transaction = transactionRepository.performTransaction(amount)
+                
+                _state.update { it.copy(
+                    isLoading = false,
+                    transaction = transaction
+                ) }
+                
                 _effect.emit(PinPadEffect.NavigateToReceipt)
+            } catch (e: Exception) {
+                _state.update { it.copy(
+                    isLoading = false,
+                    error = e.message ?: "Unknown error occurred"
+                ) }
             }
         }
     }
-
 }

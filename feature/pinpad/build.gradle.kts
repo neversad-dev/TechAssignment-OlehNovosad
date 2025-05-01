@@ -8,6 +8,9 @@ android {
 }
 
 dependencies {
+
+    implementation(projects.core.domain)
+
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.androidx.lifecycle.runtimeCompose)

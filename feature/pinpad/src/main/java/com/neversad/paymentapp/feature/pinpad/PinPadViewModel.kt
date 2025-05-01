@@ -3,8 +3,11 @@ package com.neversad.paymentapp.feature.pinpad
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -13,44 +16,44 @@ import javax.inject.Inject
 data class PinPadState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val pin: String = "",
-    val isPinValid: Boolean = false
+    val amount: String = "",
+    val isAmountValid: Boolean = false
 )
 
-sealed interface PinPadEvent {
-    data class OnPinDigitEntered(val digit: String) : PinPadEvent
-    object OnPinSubmitted : PinPadEvent
-    object OnClearPin : PinPadEvent
+sealed interface PinPadAction {
+    data class EnterDigit(val digit: String) : PinPadAction
+    data object Submit : PinPadAction
 }
 
 sealed interface PinPadEffect {
-    object NavigateToReceipt : PinPadEffect
+    data object NavigateToReceipt : PinPadEffect
 }
 
 @HiltViewModel
 class PinPadViewModel @Inject constructor() : ViewModel() {
 
+
+
     private val _state = MutableStateFlow(PinPadState())
     val state: StateFlow<PinPadState> = _state.asStateFlow()
 
-    private val _effect = MutableStateFlow<PinPadEffect?>(null)
-    val effect: StateFlow<PinPadEffect?> = _effect.asStateFlow()
+    private val _effect = MutableSharedFlow<PinPadEffect?>()
+    val effect: SharedFlow<PinPadEffect?> = _effect.asSharedFlow()
 
-    fun onEvent(event: PinPadEvent) {
-        when (event) {
-            is PinPadEvent.OnPinDigitEntered -> handlePinDigitEntered(event.digit)
-            is PinPadEvent.OnPinSubmitted -> handlePinSubmitted()
-            is PinPadEvent.OnClearPin -> handleClearPin()
+    fun onAction(action: PinPadAction) {
+        when (action) {
+            is PinPadAction.EnterDigit -> handlePinDigitEntered(action.digit)
+            is PinPadAction.Submit -> handlePinSubmitted()
         }
     }
 
     private fun handlePinDigitEntered(digit: String) {
         viewModelScope.launch {
             _state.update { currentState ->
-                val newPin = currentState.pin + digit
+                val newAmount = currentState.amount + digit
                 currentState.copy(
-                    pin = newPin,
-                    isPinValid = newPin.length == 4
+                    amount = newAmount,
+                    isAmountValid = newAmount.isNotBlank()
                 )
             }
         }
@@ -58,20 +61,10 @@ class PinPadViewModel @Inject constructor() : ViewModel() {
 
     private fun handlePinSubmitted() {
         viewModelScope.launch {
-            if (_state.value.isPinValid) {
-                _effect.value = PinPadEffect.NavigateToReceipt
+            if (_state.value.isAmountValid) {
+                _effect.emit(PinPadEffect.NavigateToReceipt)
             }
         }
     }
 
-    private fun handleClearPin() {
-        viewModelScope.launch {
-            _state.update { currentState ->
-                currentState.copy(
-                    pin = "",
-                    isPinValid = false
-                )
-            }
-        }
-    }
-} 
+}

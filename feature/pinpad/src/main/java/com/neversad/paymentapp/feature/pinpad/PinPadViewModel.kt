@@ -2,7 +2,8 @@ package com.neversad.paymentapp.feature.pinpad
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.neversad.paymentapp.core.domain.TransactionRepository
+import com.neversad.paymentapp.core.domain.common.Failure
+import com.neversad.paymentapp.core.domain.transaction.TransactionRepository
 import com.neversad.paymentapp.core.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,9 +16,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+object InvalidAmount : Failure("Invalid amount")
+
 data class PinPadState(
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val failure: Failure? = null,
     val amount: String = "",
     val isAmountValid: Boolean = false,
     val transaction: Transaction? = null
@@ -26,6 +29,7 @@ data class PinPadState(
 sealed interface PinPadAction {
     data class EnterDigit(val digit: String) : PinPadAction
     data object Submit : PinPadAction
+    data object ClearFailure : PinPadAction
 }
 
 sealed interface PinPadEffect {
@@ -47,6 +51,7 @@ class PinPadViewModel @Inject constructor(
         when (action) {
             is PinPadAction.EnterDigit -> handleDigitEntered(action.digit)
             is PinPadAction.Submit -> handleSubmit()
+            is PinPadAction.ClearFailure -> clearFailure()
         }
     }
 
@@ -63,25 +68,39 @@ class PinPadViewModel @Inject constructor(
     }
 
     private fun handleSubmit() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-            
-            try {
+
+        if (!_state.value.isAmountValid) {
+            _state.update { it.copy(failure = InvalidAmount) }
+            return
+        } else {
+            viewModelScope.launch {
+                _state.update { it.copy(isLoading = true, failure = null) }
+
                 val amount = _state.value.amount.toDoubleOrNull() ?: 0.0
-                val transaction = transactionRepository.performTransaction(amount)
-                
-                _state.update { it.copy(
-                    isLoading = false,
-                    transaction = transaction
-                ) }
-                
-                _effect.emit(PinPadEffect.NavigateToReceipt)
-            } catch (e: Exception) {
-                _state.update { it.copy(
-                    isLoading = false,
-                    error = e.message ?: "Unknown error occurred"
-                ) }
+                transactionRepository.performTransaction(amount)
+                    .onSuccess { transaction ->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                transaction = transaction
+                            )
+                        }
+                    }
+                    .onFailure { failure ->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                failure = failure
+                            )
+                        }
+                    }
             }
+        }
+    }
+
+    private fun clearFailure() {
+        viewModelScope.launch {
+            _state.update { it.copy(failure = null) }
         }
     }
 }

@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.paymentapp.android.library)
     alias(libs.plugins.paymentapp.android.hilt)
@@ -12,4 +11,6 @@ android {
 dependencies {
     implementation(projects.core.domain)
 
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.bundles.ktor)
 }

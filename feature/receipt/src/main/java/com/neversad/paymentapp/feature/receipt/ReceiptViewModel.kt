@@ -17,11 +17,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface ReceiptState {
-    data object Loading : ReceiptState
-    data class Success(val transaction: Transaction) : ReceiptState
-    data class Error(val failure: Failure) : ReceiptState
-}
+data class ReceiptState(
+    val isLoading: Boolean = true,
+    val failure: Failure? = null,
+    val transaction: Transaction = Transaction.Empty
+)
 
 sealed interface ReceiptAction {
     data object NavigateBack : ReceiptAction
@@ -38,7 +38,7 @@ class ReceiptViewModel @Inject constructor(
     private var getTransactionJob: Job? = null
 
     private val _state: MutableStateFlow<ReceiptState> =
-        MutableStateFlow(ReceiptState.Loading)
+        MutableStateFlow(ReceiptState())
     val state = _state
         .onStart {
             getTransaction()
@@ -55,12 +55,18 @@ class ReceiptViewModel @Inject constructor(
             transactionRepository.getTransaction(transactionId)
                 .onSuccess { transaction ->
                     _state.update {
-                        ReceiptState.Success(transaction)
+                        ReceiptState(
+                            isLoading = false,
+                            transaction = transaction
+                        )
                     }
                 }
                 .onFailure { failure ->
                     _state.update {
-                        ReceiptState.Error(failure)
+                        ReceiptState(
+                            isLoading = false,
+                            failure = failure
+                        )
                     }
                 }
         }

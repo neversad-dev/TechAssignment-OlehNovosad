@@ -6,6 +6,7 @@ import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.domain.transaction.TransactionRepository
 import com.neversad.paymentapp.core.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val MAX_AMOUNT = "99999999"
+private const val MAX_AMOUNT = "99999999"
 
 object InvalidAmount : Failure("Invalid amount")
 
@@ -75,11 +76,8 @@ class PinPadViewModel @Inject constructor(
 
     private fun clearAmount() {
         viewModelScope.launch {
-            _state.update { currentState ->
-                currentState.copy(
-                    amount = "",
-                    isAmountValid = false
-                )
+            _state.update {
+                PinPadState()
             }
         }
     }
@@ -96,13 +94,9 @@ class PinPadViewModel @Inject constructor(
                 val amount = _state.value.amount
                 transactionRepository.performTransaction(amount)
                     .onSuccess { transaction ->
-                        _state.update {
-                            it.copy(
-                                amount = "",
-                                isLoading = false,
-                            )
-                        }
                         _effect.emit(PinPadEffect.NavigateToReceipt(transaction.id))
+                        delay(1000)  // wait for transition to complete
+                        _state.update{ PinPadState() }
                     }
                     .onFailure { failure ->
                         _state.update {

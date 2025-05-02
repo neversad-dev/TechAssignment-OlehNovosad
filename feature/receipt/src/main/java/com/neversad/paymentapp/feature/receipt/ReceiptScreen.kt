@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.model.Transaction
+import com.neversad.paymentapp.core.ui.components.LoadingScreen
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -52,59 +53,63 @@ fun ReceiptScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(
-        modifier = modifier,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = { onAction(ReceiptAction.NavigateBack) }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                }
-            )
+
+    LaunchedEffect(state.failure) {
+        state.failure?.let {
+            snackbarHostState.showSnackbar(
+                message = state.failure.message,
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true
+            ).also {
+                onAction(ReceiptAction.NavigateBack)
+            }
         }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ) {
-            when (state) {
-                is ReceiptState.Loading -> {
-                    CircularProgressIndicator()
-                }
+    }
 
-                is ReceiptState.Success -> {
-                    TransactionDetails(state.transaction)
-                }
-
-                is ReceiptState.Error -> {
-                    LaunchedEffect(snackbarHostState) {
-                        snackbarHostState.showSnackbar(
-                            message = state.failure.message,
-                            duration = SnackbarDuration.Indefinite,
-                            withDismissAction = true
-                        ).also {
-                            onAction(ReceiptAction.NavigateBack)
+    LoadingScreen(
+        isLoading = state.isLoading,
+        modifier = modifier
+    ) {
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            topBar = {
+                TopAppBar(
+                    title = { },
+                    navigationIcon = {
+                        IconButton(onClick = { onAction(ReceiptAction.NavigateBack) }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
                         }
                     }
-                }
+                )
+            }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                TransactionDetails(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    transaction = state.transaction
+                )
             }
         }
     }
 }
 
 @Composable
-private fun TransactionDetails(transaction: Transaction) {
+private fun TransactionDetails(
+    modifier: Modifier = Modifier,
+    transaction: Transaction
+) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .padding(16.dp)
             .padding(bottom = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -183,19 +188,24 @@ private fun formatCurrency(amount: Double): String {
 fun ReceiptPreview() {
     PaymentAppTheme {
         ReceiptScreen(
-            state = ReceiptState.Success(
-                Transaction(
-                    id = "123",
-                    status = Transaction.Status.SUCCESS,
-                    purchaseAmount = "100.00",
-                    taxableAmount = "100.00",
-                    taxRate = "10.00",
-                    tipAmount = "15.00",
-                    discountAmount = "5.00",
-                    timestamp = "2024-03-20T10:30:00Z"
-                )
+            state = ReceiptState(
+                isLoading = false,
             ),
             onAction = {}
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun ReceiptPreviewLoading() {
+    PaymentAppTheme {
+        ReceiptScreen(
+            state = ReceiptState(
+                isLoading = true,
+            ),
+            onAction = {}
+        )
+    }
+}
+

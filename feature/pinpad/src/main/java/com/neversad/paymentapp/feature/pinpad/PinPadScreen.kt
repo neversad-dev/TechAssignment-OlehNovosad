@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.domain.common.Failure
+import com.neversad.paymentapp.core.ui.components.LoadingScreen
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 import com.neversad.paymentapp.feature.pinpad.components.AmountTextField
 import com.neversad.paymentapp.feature.pinpad.components.PinPadHeader
@@ -74,7 +75,8 @@ fun PinPadScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
-        Box(
+        LoadingScreen(
+            isLoading = state.isLoading,
             modifier = Modifier
                 .fillMaxSize()
         ) {
@@ -133,19 +135,6 @@ fun PinPadScreen(
                 }
             }
 
-            if (state.isLoading) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = Color.Black.copy(alpha = 0.3f)
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .align(Alignment.Center),
-                        color = Color(0xFF64B5A2)
-                    )
-                }
-            }
         }
     }
 }

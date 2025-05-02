@@ -15,5 +15,18 @@ data class Transaction(
         SUCCESS,
         FAILED
     }
+
+    companion object {
+        val Empty = Transaction(
+            id = "",
+            status = Status.FAILED,
+            purchaseAmount = "0.00",
+            taxableAmount = "0.00",
+            taxRate = "0.00",
+            tipAmount = "0.00",
+            discountAmount = "0.00",
+            timestamp = ""
+        )
+    }
 }
 

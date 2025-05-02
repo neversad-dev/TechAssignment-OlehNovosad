@@ -1,26 +1,37 @@
 package com.neversad.paymentapp.feature.pinpad
 
 import android.content.res.Configuration
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.ui.components.LoadingScreen
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
+import com.neversad.paymentapp.feature.pinpad.components.AmountTextField
 import com.neversad.paymentapp.feature.pinpad.components.PinPadHeader
 import com.neversad.paymentapp.feature.pinpad.components.PinPadKeyboard
+
 
 @Composable
 internal fun PinPadRoute(
     navigateToReceipt: (String) -> Unit,
-    viewModel: PinPadViewModel = hiltViewModel(),
+    viewModel: PinPadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val effect by viewModel.effect.collectAsStateWithLifecycle(null)
@@ -36,7 +47,7 @@ internal fun PinPadRoute(
 
     PinPadScreen(
         state = state,
-        onAction = viewModel::onAction,
+        onAction = viewModel::onAction
     )
 }
 
@@ -44,51 +55,50 @@ internal fun PinPadRoute(
 fun PinPadScreen(
     state: PinPadState,
     onAction: (PinPadAction) -> Unit,
-    orientation: Int = LocalConfiguration.current.orientation,
+    orientation: Int = LocalConfiguration.current.orientation
+
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(state.failure) {
         state.failure?.let { failure ->
-            snackbarHostState
-                .showSnackbar(
-                    message = failure.message,
-                    duration = SnackbarDuration.Short,
-                    withDismissAction = true,
-                ).also {
-                    onAction(PinPadAction.ClearFailure)
-                }
+            snackbarHostState.showSnackbar(
+                message = failure.message,
+                duration = SnackbarDuration.Short,
+                withDismissAction = true,
+            ).also {
+                onAction(PinPadAction.ClearFailure)
+            }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         LoadingScreen(
             isLoading = state.isLoading,
-            modifier =
-                Modifier
-                    .fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
         ) {
+
+
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 Row(
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
                     PinPadHeader(
                         amount = state.formattedAmount,
                         onClear = {
                             onAction(PinPadAction.ClearAmount)
                         },
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .windowInsetsPadding(
-                                    WindowInsets.safeDrawing.only(
-                                        WindowInsetsSides.Start + WindowInsetsSides.Vertical,
-                                    ),
-                                ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .windowInsetsPadding(
+                                WindowInsets.safeDrawing.only(
+                                    WindowInsetsSides.Start + WindowInsetsSides.Vertical
+                                )
+                            )
                     )
 
                     PinPadKeyboard(
@@ -98,34 +108,32 @@ fun PinPadScreen(
                         onSubmit = {
                             onAction(PinPadAction.Submit)
                         },
-                        modifier =
-                            Modifier
-                                .weight(0.8f),
-                        windowInsets =
-                            WindowInsets.safeDrawing.only(
-                                WindowInsetsSides.End + WindowInsetsSides.Vertical,
-                            ),
+                        modifier = Modifier
+                            .weight(0.8f),
+                        windowInsets = WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.End + WindowInsetsSides.Vertical
+                        )
                     )
+
                 }
             } else {
+
                 Column(
-                    modifier =
-                        Modifier
-                            .fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
                     PinPadHeader(
                         amount = state.formattedAmount,
                         onClear = {
                             onAction(PinPadAction.ClearAmount)
                         },
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .windowInsetsPadding(
-                                    WindowInsets.safeDrawing.only(
-                                        WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
-                                    ),
-                                ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .windowInsetsPadding(
+                                WindowInsets.safeDrawing.only(
+                                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal
+                                )
+                            )
                     )
 
                     PinPadKeyboard(
@@ -135,23 +143,24 @@ fun PinPadScreen(
                         onSubmit = {
                             onAction(PinPadAction.Submit)
                         },
-                        modifier =
-                            Modifier
-                                .weight(1.1f),
-                        windowInsets =
-                            WindowInsets.safeDrawing.only(
-                                WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal,
-                            ),
+                        modifier = Modifier
+                            .weight(1.1f),
+                        windowInsets = WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal
+                        )
                     )
+
                 }
             }
+
         }
     }
 }
 
+
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-private fun PinPadScreenPreview() {
+fun PinPadScreenPreview() {
     PaymentAppTheme {
         PinPadScreen(
             state = PinPadState(),
@@ -162,11 +171,10 @@ private fun PinPadScreenPreview() {
 
 @Composable
 @Preview(
-    showBackground = true,
-    showSystemUi = true,
-    device = "spec:parent=pixel_5,orientation=landscape",
+    showBackground = true, showSystemUi = true,
+    device = "spec:parent=pixel_5,orientation=landscape"
 )
-private fun PinPadScreenPreviewLandscapePreview() {
+fun PinPadScreenPreviewLandscape() {
     PaymentAppTheme {
         PinPadScreen(
             state = PinPadState(),
@@ -174,3 +182,4 @@ private fun PinPadScreenPreviewLandscapePreview() {
         )
     }
 }
+

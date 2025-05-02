@@ -92,7 +92,13 @@ fun PinPadScreen(
                         onClear = {
                             onAction(PinPadAction.ClearAmount)
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .windowInsetsPadding(
+                                WindowInsets.safeDrawing.only(
+                                    WindowInsetsSides.Start + WindowInsetsSides.Vertical
+                                )
+                            )
                     )
 
                     PinPadKeyboard(
@@ -103,7 +109,10 @@ fun PinPadScreen(
                             onAction(PinPadAction.Submit)
                         },
                         modifier = Modifier
-                            .weight(0.8f)
+                            .weight(0.8f),
+                        windowInsets = WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.End + WindowInsetsSides.Vertical
+                        )
                     )
 
                 }
@@ -118,7 +127,13 @@ fun PinPadScreen(
                         onClear = {
                             onAction(PinPadAction.ClearAmount)
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .windowInsetsPadding(
+                                WindowInsets.safeDrawing.only(
+                                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal
+                                )
+                            )
                     )
 
                     PinPadKeyboard(
@@ -129,7 +144,10 @@ fun PinPadScreen(
                             onAction(PinPadAction.Submit)
                         },
                         modifier = Modifier
-                            .weight(1.1f)
+                            .weight(1.1f),
+                        windowInsets = WindowInsets.safeDrawing.only(
+                            WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal
+                        )
                     )
 
                 }

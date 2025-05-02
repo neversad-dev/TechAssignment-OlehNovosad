@@ -22,9 +22,12 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,8 +38,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 
 
@@ -45,6 +54,7 @@ internal fun PinPadKeyboard(
     onDigitClick: (Int) -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
+    windowInsets: WindowInsets = WindowInsets.safeDrawing
 ) {
     Surface(
         modifier = modifier
@@ -54,6 +64,7 @@ internal fun PinPadKeyboard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .windowInsetsPadding(windowInsets)
         ) {
             Row(
                 modifier = Modifier.weight(1f),
@@ -105,10 +116,6 @@ internal fun PinPadKeyboard(
                     onClick = onSubmit
                 )
             }
-            Spacer(
-                modifier= Modifier.fillMaxWidth()
-                    .windowInsetsBottomHeight(WindowInsets.navigationBars)
-            )
         }
     }
 }
@@ -154,9 +161,14 @@ private fun RowScope.ActionButton(
                 .padding(horizontal = 12.dp),
             shape = MaterialTheme.shapes.small,
         ) {
-            Text(
+            val style = MaterialTheme.typography.headlineLarge
+            BasicText(
                 text = text,
-                style = MaterialTheme.typography.headlineLarge
+                style = style.merge(
+                    color = style.color.takeOrElse { LocalContentColor.current }
+                ),
+                autoSize = TextAutoSize.StepBased(),
+                maxLines = 1,
             )
         }
     }

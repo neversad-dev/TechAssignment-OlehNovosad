@@ -1,5 +1,8 @@
 package com.neversad.paymentapp.feature.receipt
 
+import android.content.res.Configuration
+import android.preference.PreferenceActivity.Header
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -11,7 +14,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalMapOf
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.model.Transaction
 import com.neversad.paymentapp.core.ui.components.LoadingScreen
+import com.neversad.paymentapp.core.ui.components.OrientationAware
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -72,8 +79,12 @@ fun ReceiptScreen(
     ) {
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
+            contentWindowInsets = WindowInsets(0),
             topBar = {
                 TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    ),
                     title = { },
                     navigationIcon = {
                         IconButton(onClick = { onAction(ReceiptAction.NavigateBack) }) {
@@ -86,19 +97,11 @@ fun ReceiptScreen(
                 )
             }
         ) { paddingValues ->
-            Box(
+            TransactionDetails(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                TransactionDetails(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues),
-                    transaction = state.transaction
-                )
-            }
+                    .fillMaxSize(),
+                transaction = state.transaction
+            )
         }
     }
 }
@@ -108,36 +111,59 @@ private fun TransactionDetails(
     modifier: Modifier = Modifier,
     transaction: Transaction
 ) {
-    Column(
+
+    val isHorizontal = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    OrientationAware(
         modifier = modifier
-            .padding(16.dp)
-            .padding(bottom = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .fillMaxSize()
     ) {
+
+        val headerWeight = if (isHorizontal) 1f else 0.6f
+        val footerWeight = if (isHorizontal) 0.8f else 1f
+        Header(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(headerWeight)
+                .padding(horizontal = 16.dp)
+                .headerInsets(),
+            transaction = transaction,
+            verticalArrangement = if (isHorizontal) Arrangement.Center else Arrangement.Bottom,
+            horizontalAlignment = if (isHorizontal) Alignment.Start else Alignment.CenterHorizontally
+        )
+
+        val paddingHorizontal = if (isHorizontal) 64.dp else 16.dp
+        val background =
+            if (isHorizontal) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+        Footer(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(footerWeight)
+                .background(color = background)
+                .padding(horizontal = paddingHorizontal)
+                .footerInsets(),
+            verticalArrangement = if (isHorizontal) Arrangement.Center else Arrangement.Top,
+            transaction = transaction
+        )
+    }
+}
+
+@Composable
+private fun Header(
+    modifier: Modifier = Modifier,
+    transaction: Transaction,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Bottom,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment
+    ) {
+
         Text(
             text = "Transaction Details",
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
-
-        TransactionDetailRow("Transaction ID", transaction.id)
-        TransactionDetailRow("Status", transaction.status.name)
-
-        val purchaseAmount = transaction.purchaseAmount.toDoubleOrNull() ?: 0.0
-        val taxAmount = (purchaseAmount * (transaction.taxRate.toDoubleOrNull() ?: 0.0) / 100)
-        val tipAmount = transaction.tipAmount.toDoubleOrNull() ?: 0.0
-        val discountAmount = transaction.discountAmount.toDoubleOrNull() ?: 0.0
-        val finalAmount = purchaseAmount + taxAmount + tipAmount - discountAmount
-
-        TransactionDetailRow("Purchase Amount", formatCurrency(purchaseAmount))
-        TransactionDetailRow("Tax", formatCurrency(taxAmount))
-        TransactionDetailRow("Tip", formatCurrency(tipAmount))
-        TransactionDetailRow("Discount", formatCurrency(discountAmount))
-        TransactionDetailRow(
-            "Final Amount",
-            formatCurrency(finalAmount),
-            isHighlighted = true
+            modifier = Modifier.padding(bottom = 16.dp)
         )
 
         val date = try {
@@ -148,8 +174,40 @@ private fun TransactionDetails(
         } catch (e: Exception) {
             transaction.timestamp
         }
+        Text(
+            modifier = Modifier.padding(bottom = 24.dp),
+            text = date,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+    }
+}
 
-        TransactionDetailRow("Date", date)
+@Composable
+private fun Footer(
+    modifier: Modifier = Modifier,
+    transaction: Transaction,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = verticalArrangement
+    ) {
+        TransactionDetailRow("Transaction ID", transaction.id)
+        TransactionDetailRow("Transaction Status", transaction.status.name)
+
+        val purchaseAmount = transaction.purchaseAmount.toDoubleOrNull() ?: 0.0
+        val taxAmount = (purchaseAmount * (transaction.taxRate.toDoubleOrNull() ?: 0.0) / 100)
+        val tipAmount = transaction.tipAmount.toDoubleOrNull() ?: 0.0
+        val discountAmount = transaction.discountAmount.toDoubleOrNull() ?: 0.0
+        val finalAmount = purchaseAmount + taxAmount + tipAmount - discountAmount
+
+        TransactionDetailRow(
+            "Final Amount",
+            formatCurrency(finalAmount),
+            isHighlighted = true
+        )
+
+        TransactionDetailRow("Tax", formatCurrency(taxAmount))
     }
 }
 
@@ -157,7 +215,8 @@ private fun TransactionDetails(
 private fun TransactionDetailRow(
     label: String,
     value: String,
-    isHighlighted: Boolean = false
+    isHighlighted: Boolean = false,
+    isError: Boolean = false,
 ) {
     Row(
         modifier = Modifier
@@ -165,16 +224,21 @@ private fun TransactionDetailRow(
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        val textColor = when {
+            isError -> MaterialTheme.colorScheme.error
+            isHighlighted -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.onSurface
+        }
         Text(
             text = label,
             style = MaterialTheme.typography.bodyLarge,
-            color = if (isHighlighted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            color = textColor
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal,
-            color = if (isHighlighted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            color = textColor
         )
     }
 }
@@ -196,13 +260,13 @@ fun ReceiptPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, device = "spec:parent=pixel_5,orientation=landscape")
 @Composable
 fun ReceiptPreviewLoading() {
     PaymentAppTheme {
         ReceiptScreen(
             state = ReceiptState(
-                isLoading = true,
+                isLoading = false,
             ),
             onAction = {}
         )

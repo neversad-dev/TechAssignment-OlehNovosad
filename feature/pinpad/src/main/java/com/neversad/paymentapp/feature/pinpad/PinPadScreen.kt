@@ -1,6 +1,7 @@
 package com.neversad.paymentapp.feature.pinpad
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.ui.components.LoadingScreen
+import com.neversad.paymentapp.core.ui.components.OrientationAware
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 import com.neversad.paymentapp.feature.pinpad.components.AmountTextField
 import com.neversad.paymentapp.feature.pinpad.components.PinPadHeader
@@ -41,6 +43,7 @@ internal fun PinPadRoute(
             is PinPadEffect.NavigateToReceipt -> {
                 navigateToReceipt(navigateToReceiptEffect.transactionId)
             }
+
             null -> {}
         }
     }
@@ -80,77 +83,37 @@ fun PinPadScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
+            val isHorizontal =
+                LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+            OrientationAware(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
 
-
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                Row(
+                val headerWeight = if (isHorizontal) 1f else 0.6f
+                val footerWeight = if (isHorizontal) 0.8f else 1f
+                PinPadHeader(
+                    amount = state.formattedAmount,
+                    onClear = {
+                        onAction(PinPadAction.ClearAmount)
+                    },
                     modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    PinPadHeader(
-                        amount = state.formattedAmount,
-                        onClear = {
-                            onAction(PinPadAction.ClearAmount)
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .windowInsetsPadding(
-                                WindowInsets.safeDrawing.only(
-                                    WindowInsetsSides.Start + WindowInsetsSides.Vertical
-                                )
-                            )
-                    )
+                        .weight(headerWeight)
+                        .headerInsets()
+                )
 
-                    PinPadKeyboard(
-                        onDigitClick = { digit ->
-                            onAction(PinPadAction.EnterDigit(digit.toString()))
-                        },
-                        onSubmit = {
-                            onAction(PinPadAction.Submit)
-                        },
-                        modifier = Modifier
-                            .weight(0.8f),
-                        windowInsets = WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.End + WindowInsetsSides.Vertical
-                        )
-                    )
-
-                }
-            } else {
-
-                Column(
+                PinPadKeyboard(
+                    onDigitClick = { digit ->
+                        onAction(PinPadAction.EnterDigit(digit.toString()))
+                    },
+                    onSubmit = {
+                        onAction(PinPadAction.Submit)
+                    },
                     modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    PinPadHeader(
-                        amount = state.formattedAmount,
-                        onClear = {
-                            onAction(PinPadAction.ClearAmount)
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .windowInsetsPadding(
-                                WindowInsets.safeDrawing.only(
-                                    WindowInsetsSides.Top + WindowInsetsSides.Horizontal
-                                )
-                            )
-                    )
+                        .weight(footerWeight)
+                        .footerInsets(),
 
-                    PinPadKeyboard(
-                        onDigitClick = { digit ->
-                            onAction(PinPadAction.EnterDigit(digit.toString()))
-                        },
-                        onSubmit = {
-                            onAction(PinPadAction.Submit)
-                        },
-                        modifier = Modifier
-                            .weight(1.1f),
-                        windowInsets = WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal
-                        )
                     )
-
-                }
             }
 
         }

@@ -1,5 +1,6 @@
 package com.neversad.paymentapp.feature.pinpad.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -56,10 +57,10 @@ internal fun PinPadKeyboard(
     modifier: Modifier = Modifier,
     windowInsets: WindowInsets = WindowInsets.safeDrawing
 ) {
-    Surface(
-        modifier = modifier
-            .fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surfaceVariant
+    Box(
+        modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.surfaceVariant)
+            .then(modifier),
     ) {
         Column(
             modifier = Modifier

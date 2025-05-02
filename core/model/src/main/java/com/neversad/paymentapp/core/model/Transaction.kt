@@ -25,7 +25,7 @@ data class Transaction(
             taxRate = "0.00",
             tipAmount = "0.00",
             discountAmount = "0.00",
-            timestamp = ""
+            timestamp = "2025-01-01T00:00:00Z"
         )
     }
 }

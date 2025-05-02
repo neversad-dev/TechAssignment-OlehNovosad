@@ -1,0 +1,47 @@
+root = true
+
+###############################################################
+# Global defaults (apply to every file unless overridden)
+###############################################################
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+###############################################################
+# Kotlin source files (common rules)
+###############################################################
+[*.{kt,kts}]
+indent_style = space
+indent_size  = 4                 # official Kotlin / Android style
+max_line_length = 120
+ij_kotlin_imports_layout = *,javax,java,android,^
+ij_kotlin_continuation_indent_size = 4
+
+###############################################################
+# ➤ Jetpack Compose rules (ktlint‑compose‑rules)
+#   These keys are read when the ruleset is on the classpath.
+###############################################################
+
+ktlint_function_naming_ignore_when_annotated_with = Composable
+
+compose_disallow_material2 = true
+
+compose_preview_naming_enabled = true
+compose_preview_naming_strategy = suffix
+
+###############################################################
+# Gradle Kotlin DSL scripts
+###############################################################
+[*.gradle.kts]
+indent_style = space
+indent_size  = 4
+max_line_length = 120
+
+###############################################################
+# XML resources (layouts / manifests)
+###############################################################
+[*.xml]
+indent_style = space
+indent_size  = 4

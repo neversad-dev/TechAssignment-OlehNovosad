@@ -2,6 +2,7 @@ package com.neversad.paymentapp.feature.receipt
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,20 +48,20 @@ fun ReceiptRoute(
 fun ReceiptScreen(
     state: ReceiptState,
     onAction: (ReceiptAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        modifier = Modifier.consumeWindowInsets(WindowInsets.safeDrawing),
-        contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Transaction Receipt") },
+                title = { },
                 navigationIcon = {
                     IconButton(onClick = { onAction(ReceiptAction.NavigateBack) }) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -77,9 +79,11 @@ fun ReceiptScreen(
                 is ReceiptState.Loading -> {
                     CircularProgressIndicator()
                 }
+
                 is ReceiptState.Success -> {
                     TransactionDetails(state.transaction)
                 }
+
                 is ReceiptState.Error -> {
                     LaunchedEffect(snackbarHostState) {
                         snackbarHostState.showSnackbar(
@@ -100,9 +104,11 @@ fun ReceiptScreen(
 private fun TransactionDetails(transaction: Transaction) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .padding(16.dp)
+            .padding(bottom = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Transaction Details",
@@ -112,7 +118,7 @@ private fun TransactionDetails(transaction: Transaction) {
 
         TransactionDetailRow("Transaction ID", transaction.id)
         TransactionDetailRow("Status", transaction.status.name)
-        
+
         val purchaseAmount = transaction.purchaseAmount.toDoubleOrNull() ?: 0.0
         val taxAmount = (purchaseAmount * (transaction.taxRate.toDoubleOrNull() ?: 0.0) / 100)
         val tipAmount = transaction.tipAmount.toDoubleOrNull() ?: 0.0
@@ -137,7 +143,7 @@ private fun TransactionDetails(transaction: Transaction) {
         } catch (e: Exception) {
             transaction.timestamp
         }
-        
+
         TransactionDetailRow("Date", date)
     }
 }

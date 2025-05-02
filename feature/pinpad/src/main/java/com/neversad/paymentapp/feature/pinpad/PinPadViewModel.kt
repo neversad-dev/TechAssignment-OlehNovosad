@@ -27,6 +27,7 @@ data class PinPadState(
 
 sealed interface PinPadAction {
     data class EnterDigit(val digit: String) : PinPadAction
+    data object ClearAmount: PinPadAction
     data object Submit : PinPadAction
     data object ClearFailure : PinPadAction
 }
@@ -51,6 +52,7 @@ class PinPadViewModel @Inject constructor(
             is PinPadAction.EnterDigit -> handleDigitEntered(action.digit)
             is PinPadAction.Submit -> handleSubmit()
             is PinPadAction.ClearFailure -> clearFailure()
+            is PinPadAction.ClearAmount -> clearAmount()
         }
     }
 
@@ -61,6 +63,17 @@ class PinPadViewModel @Inject constructor(
                 currentState.copy(
                     amount = newAmount,
                     isAmountValid = newAmount.isNotBlank()
+                )
+            }
+        }
+    }
+
+    private fun clearAmount() {
+        viewModelScope.launch {
+            _state.update { currentState ->
+                currentState.copy(
+                    amount = "",
+                    isAmountValid = false
                 )
             }
         }

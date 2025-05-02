@@ -2,6 +2,7 @@ package com.neversad.paymentapp.feature.receipt
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.model.Transaction
+import com.neversad.paymentapp.core.ui.components.LoadingScreen
+import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,61 +49,71 @@ fun ReceiptRoute(
 fun ReceiptScreen(
     state: ReceiptState,
     onAction: (ReceiptAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            TopAppBar(
-                title = { Text("Transaction Receipt") },
-                navigationIcon = {
-                    IconButton(onClick = { onAction(ReceiptAction.NavigateBack) }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-                }
-            )
+
+    LaunchedEffect(state.failure) {
+        state.failure?.let {
+            snackbarHostState.showSnackbar(
+                message = state.failure.message,
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true
+            ).also {
+                onAction(ReceiptAction.NavigateBack)
+            }
         }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ) {
-            when (state) {
-                is ReceiptState.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is ReceiptState.Success -> {
-                    TransactionDetails(state.transaction)
-                }
-                is ReceiptState.Error -> {
-                    LaunchedEffect(snackbarHostState) {
-                        snackbarHostState.showSnackbar(
-                            message = state.failure.message,
-                            duration = SnackbarDuration.Indefinite,
-                            withDismissAction = true
-                        ).also {
-                            onAction(ReceiptAction.NavigateBack)
+    }
+
+    LoadingScreen(
+        isLoading = state.isLoading,
+        modifier = modifier
+    ) {
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            topBar = {
+                TopAppBar(
+                    title = { },
+                    navigationIcon = {
+                        IconButton(onClick = { onAction(ReceiptAction.NavigateBack) }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
                         }
                     }
-                }
+                )
+            }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                TransactionDetails(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    transaction = state.transaction
+                )
             }
         }
     }
 }
 
 @Composable
-private fun TransactionDetails(transaction: Transaction) {
+private fun TransactionDetails(
+    modifier: Modifier = Modifier,
+    transaction: Transaction
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .padding(16.dp)
+            .padding(bottom = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = "Transaction Details",
@@ -109,7 +123,7 @@ private fun TransactionDetails(transaction: Transaction) {
 
         TransactionDetailRow("Transaction ID", transaction.id)
         TransactionDetailRow("Status", transaction.status.name)
-        
+
         val purchaseAmount = transaction.purchaseAmount.toDoubleOrNull() ?: 0.0
         val taxAmount = (purchaseAmount * (transaction.taxRate.toDoubleOrNull() ?: 0.0) / 100)
         val tipAmount = transaction.tipAmount.toDoubleOrNull() ?: 0.0
@@ -134,7 +148,7 @@ private fun TransactionDetails(transaction: Transaction) {
         } catch (e: Exception) {
             transaction.timestamp
         }
-        
+
         TransactionDetailRow("Date", date)
     }
 }
@@ -172,19 +186,26 @@ private fun formatCurrency(amount: Double): String {
 @Preview(showBackground = true)
 @Composable
 fun ReceiptPreview() {
-    ReceiptScreen(
-        state = ReceiptState.Success(
-            Transaction(
-                id = "123",
-                status = Transaction.Status.SUCCESS,
-                purchaseAmount = "100.00",
-                taxableAmount = "100.00",
-                taxRate = "10.00",
-                tipAmount = "15.00",
-                discountAmount = "5.00",
-                timestamp = "2024-03-20T10:30:00Z"
-            )
-        ),
-        onAction = {}
-    )
+    PaymentAppTheme {
+        ReceiptScreen(
+            state = ReceiptState(
+                isLoading = false,
+            ),
+            onAction = {}
+        )
+    }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun ReceiptPreviewLoading() {
+    PaymentAppTheme {
+        ReceiptScreen(
+            state = ReceiptState(
+                isLoading = true,
+            ),
+            onAction = {}
+        )
+    }
+}
+

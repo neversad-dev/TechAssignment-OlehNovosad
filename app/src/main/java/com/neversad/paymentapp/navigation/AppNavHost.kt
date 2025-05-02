@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.neversad.paymentapp.feature.pinpad.PinPad
-import com.neversad.paymentapp.feature.pinpad.PinPadRoute
 import com.neversad.paymentapp.feature.pinpad.pinPadScreen
 import com.neversad.paymentapp.feature.pinpad.navigateToPinPad
 import com.neversad.paymentapp.feature.receipt.Receipt

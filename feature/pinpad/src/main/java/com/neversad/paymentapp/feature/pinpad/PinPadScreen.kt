@@ -1,5 +1,7 @@
 package com.neversad.paymentapp.feature.pinpad
 
+import android.content.res.Configuration
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -10,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,7 +53,9 @@ internal fun PinPadRoute(
 @Composable
 fun PinPadScreen(
     state: PinPadState,
-    onAction: (PinPadAction) -> Unit
+    onAction: (PinPadAction) -> Unit,
+    orientation: Int = LocalConfiguration.current.orientation
+
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -73,29 +78,60 @@ fun PinPadScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                PinPadHeader(
-                    amount = state.amount.toAmountFormat(),
-                    onClear = {
-                        onAction(PinPadAction.ClearAmount)
-                    },
-                    modifier = Modifier.weight(1f)
-                )
 
-                PinPadKeyboard(
-                    onDigitClick = { digit ->
-                        onAction(PinPadAction.EnterDigit(digit.toString()))
-                    },
-                    onSubmit = {
-                        onAction(PinPadAction.Submit)
-                    },
+
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE){
+                Row(
                     modifier = Modifier
-                        .weight(1.1f)
-                )
+                        .fillMaxSize()
+                ) {
+                    PinPadHeader(
+                        amount = state.amount.toAmountFormat(),
+                        onClear = {
+                            onAction(PinPadAction.ClearAmount)
+                        },
+                        modifier = Modifier.weight(1f).fillMaxHeight()
+                    )
 
+                    PinPadKeyboard(
+                        onDigitClick = { digit ->
+                            onAction(PinPadAction.EnterDigit(digit.toString()))
+                        },
+                        onSubmit = {
+                            onAction(PinPadAction.Submit)
+                        },
+                        modifier = Modifier
+                            .weight(0.8f)
+                    )
+
+                }
+            }else {
+
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    PinPadHeader(
+                        amount = state.amount.toAmountFormat(),
+                        onClear = {
+                            onAction(PinPadAction.ClearAmount)
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    PinPadKeyboard(
+                        onDigitClick = { digit ->
+                            onAction(PinPadAction.EnterDigit(digit.toString()))
+                        },
+                        onSubmit = {
+                            onAction(PinPadAction.Submit)
+                        },
+                        modifier = Modifier
+                            .weight(1.1f)
+                    )
+
+                }
             }
 
             if (state.isLoading) {
@@ -162,12 +198,24 @@ private fun String.toAmountFormat(): String {
 
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 fun PinPadScreenPreview() {
     PaymentAppTheme {
         PinPadScreen(
             state = PinPadState(),
-            onAction = {}
+            onAction = {},
+        )
+    }
+}
+@Composable
+@Preview(showBackground = true, showSystemUi = true,
+    device = "spec:parent=pixel_5,orientation=landscape"
+)
+fun PinPadScreenPreviewLandscape() {
+    PaymentAppTheme {
+        PinPadScreen(
+            state = PinPadState(),
+            onAction = {},
         )
     }
 }

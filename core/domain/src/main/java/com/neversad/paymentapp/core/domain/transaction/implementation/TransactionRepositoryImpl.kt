@@ -7,20 +7,19 @@ import com.neversad.paymentapp.core.domain.transaction.TransactionRepository
 import com.neversad.paymentapp.core.model.Transaction
 import javax.inject.Inject
 
-internal class TransactionRepositoryImpl @Inject constructor(
-    private val transactionApi: TransactionApi,
-    private val transactionDataSource: TransactionDataSource
-) : TransactionRepository {
+internal class TransactionRepositoryImpl
+    @Inject
+    constructor(
+        private val transactionApi: TransactionApi,
+        private val transactionDataSource: TransactionDataSource,
+    ) : TransactionRepository {
+        override suspend fun performTransaction(amount: String): Result<Transaction> =
+            transactionApi
+                .performTransaction(amount)
+                .flatMap {
+                    transactionDataSource.saveTransaction(it)
+                }
 
-    override suspend fun performTransaction(amount: String): Result<Transaction> {
-        return transactionApi
-            .performTransaction(amount)
-            .flatMap {
-                transactionDataSource.saveTransaction(it)
-            }
+        override suspend fun getTransaction(transactionId: String): Result<Transaction> =
+            transactionDataSource.getTransactionById(transactionId)
     }
-
-    override suspend fun getTransaction(transactionId: String): Result<Transaction> {
-        return transactionDataSource.getTransactionById(transactionId)
-    }
-}

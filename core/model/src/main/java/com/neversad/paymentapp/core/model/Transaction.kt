@@ -1,6 +1,5 @@
 package com.neversad.paymentapp.core.model
 
-
 data class Transaction(
     val id: String,
     val status: Status,
@@ -13,20 +12,20 @@ data class Transaction(
 ) {
     enum class Status {
         SUCCESS,
-        FAILED
+        FAILED,
     }
 
     companion object {
-        val Empty = Transaction(
-            id = "",
-            status = Status.FAILED,
-            purchaseAmount = "0.00",
-            taxableAmount = "0.00",
-            taxRate = "0.00",
-            tipAmount = "0.00",
-            discountAmount = "0.00",
-            timestamp = ""
-        )
+        val Empty =
+            Transaction(
+                id = "",
+                status = Status.FAILED,
+                purchaseAmount = "0.00",
+                taxableAmount = "0.00",
+                taxRate = "0.00",
+                tipAmount = "0.00",
+                discountAmount = "0.00",
+                timestamp = "",
+            )
     }
 }
-

@@ -27,8 +27,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             PaymentAppTheme {
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                 ) {
                     AppNavHost()
                 }

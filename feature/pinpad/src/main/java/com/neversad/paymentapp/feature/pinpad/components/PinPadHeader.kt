@@ -17,30 +17,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 
-
 @Composable
 internal fun PinPadHeader(
     modifier: Modifier = Modifier,
     amount: String,
-    onClear: () -> Unit
+    onClear: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = "Purchase",
-            style = MaterialTheme.typography.headlineLarge
+            style = MaterialTheme.typography.headlineLarge,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "Please enter amount.",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                color = Color(0xFF6B6B6B)
-            )
+            style =
+                MaterialTheme.typography.bodyLarge.copy(
+                    color = Color(0xFF6B6B6B),
+                ),
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -48,20 +48,21 @@ internal fun PinPadHeader(
         AmountTextField(
             amount = amount,
             onClear = onClear,
-            modifier = Modifier
-                .padding(horizontal = 32.dp)
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .padding(horizontal = 32.dp)
+                    .fillMaxWidth(),
         )
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PinPadHeaderPreview() {
+private fun PinPadHeaderPreview() {
     PaymentAppTheme {
         PinPadHeader(
             amount = "100.00",
-            onClear = {}
+            onClear = {},
         )
     }
 }

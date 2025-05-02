@@ -4,13 +4,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 object PinPad
 
 fun NavController.navigateToPinPad(navOptions: NavOptions? = null) {
-    navigate(PinPad, navOptions) // Type safe navigation
+    navigate(PinPad, navOptions)  // Type safe navigation
 }
 
 fun NavGraphBuilder.pinPadScreen(navigateToReceipt: (String) -> Unit) {

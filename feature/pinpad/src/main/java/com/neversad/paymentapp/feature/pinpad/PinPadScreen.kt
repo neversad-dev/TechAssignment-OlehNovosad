@@ -90,8 +90,8 @@ fun PinPadScreen(
                     .fillMaxSize()
             ) {
 
-                val headerWeight = if (isHorizontal) 1f else 0.6f
-                val footerWeight = if (isHorizontal) 0.8f else 1f
+                val headerWeight = if (isHorizontal) 1f else 1f
+                val footerWeight = if (isHorizontal) 0.8f else 1.1f
                 PinPadHeader(
                     amount = state.formattedAmount,
                     onClear = {

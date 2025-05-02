@@ -193,7 +193,11 @@ private fun Footer(
         verticalArrangement = verticalArrangement
     ) {
         TransactionDetailRow("Transaction ID", transaction.id)
-        TransactionDetailRow("Transaction Status", transaction.status.name)
+        TransactionDetailRow(
+            "Transaction Status",
+            transaction.status.name,
+            transaction.status != Transaction.Status.SUCCESS
+        )
 
         val purchaseAmount = transaction.purchaseAmount.toDoubleOrNull() ?: 0.0
         val taxAmount = (purchaseAmount * (transaction.taxRate.toDoubleOrNull() ?: 0.0) / 100)

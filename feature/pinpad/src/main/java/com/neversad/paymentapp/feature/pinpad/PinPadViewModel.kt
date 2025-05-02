@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private val MAX_AMOUNT = "99999999"
+
 object InvalidAmount : Failure("Invalid amount")
 
 data class PinPadState(
@@ -59,7 +61,10 @@ class PinPadViewModel @Inject constructor(
     private fun handleDigitEntered(digit: String) {
         viewModelScope.launch {
             _state.update { currentState ->
-                val newAmount = currentState.amount + digit
+                var newAmount = currentState.amount + digit
+                if (newAmount.length > MAX_AMOUNT.length) {
+                    newAmount = MAX_AMOUNT
+                }
                 currentState.copy(
                     amount = newAmount,
                     isAmountValid = newAmount.isNotBlank()
@@ -117,3 +122,17 @@ class PinPadViewModel @Inject constructor(
         }
     }
 }
+
+
+val PinPadState.formattedAmount: String
+    get() = if (amount.length <= 2) {
+        "0.${amount.padStart(2, '0')}"
+    } else {
+        val wholePart = amount.substring(0, amount.length - 2)
+        val decimalPart = amount.substring(amount.length - 2)
+        val formattedWholePart = wholePart.reversed()
+            .chunked(3)
+            .joinToString(",")
+            .reversed()
+        "$formattedWholePart.$decimalPart"
+    }

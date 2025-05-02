@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
 import com.neversad.paymentapp.feature.pinpad.components.AmountTextField
+import com.neversad.paymentapp.feature.pinpad.components.PinPadHeader
 import com.neversad.paymentapp.feature.pinpad.components.PinPadKeyboard
 
 
@@ -39,7 +40,6 @@ internal fun PinPadRoute(
             is PinPadEffect.NavigateToReceipt -> {
                 navigateToReceipt(navigateToReceiptEffect.transactionId)
             }
-
             null -> {}
         }
     }
@@ -80,17 +80,17 @@ fun PinPadScreen(
         ) {
 
 
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE){
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
                     PinPadHeader(
-                        amount = state.amount.toAmountFormat(),
+                        amount = state.formattedAmount,
                         onClear = {
                             onAction(PinPadAction.ClearAmount)
                         },
-                        modifier = Modifier.weight(1f).fillMaxHeight()
+                        modifier = Modifier.weight(1f)
                     )
 
                     PinPadKeyboard(
@@ -105,15 +105,14 @@ fun PinPadScreen(
                     )
 
                 }
-            }else {
-
+            } else {
 
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
                     PinPadHeader(
-                        amount = state.amount.toAmountFormat(),
+                        amount = state.formattedAmount,
                         onClear = {
                             onAction(PinPadAction.ClearAmount)
                         },
@@ -151,51 +150,6 @@ fun PinPadScreen(
     }
 }
 
-@Composable
-private fun PinPadHeader(
-    modifier: Modifier = Modifier,
-    amount: String,
-    onClear: () -> Unit
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Purchase",
-            style = MaterialTheme.typography.headlineLarge
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Please enter amount.",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                color = Color(0xFF6B6B6B)
-            )
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        AmountTextField(
-            amount = amount,
-            onClear = onClear,
-            modifier = Modifier
-                .padding(horizontal = 32.dp)
-                .fillMaxWidth()
-        )
-    }
-}
-
-private fun String.toAmountFormat(): String {
-    return if (this.length <= 2) {
-        "0.${this.padStart(2, '0')}"
-    } else {
-        "${this.substring(0, this.length - 2)}.${this.substring(this.length - 2)}"
-    }
-}
-
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
@@ -207,8 +161,10 @@ fun PinPadScreenPreview() {
         )
     }
 }
+
 @Composable
-@Preview(showBackground = true, showSystemUi = true,
+@Preview(
+    showBackground = true, showSystemUi = true,
     device = "spec:parent=pixel_5,orientation=landscape"
 )
 fun PinPadScreenPreviewLandscape() {

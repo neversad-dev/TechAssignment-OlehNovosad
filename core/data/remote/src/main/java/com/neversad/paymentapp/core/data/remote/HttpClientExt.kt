@@ -2,7 +2,6 @@ package com.neversad.paymentapp.core.data.remote
 
 import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.domain.common.Result
-import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.statement.HttpResponse
@@ -39,6 +38,7 @@ suspend inline fun <reified T> parseResponse(
                 Result.Failure(NetworkFailure.InvalidFormat)
             }
         }
+
         408 -> Result.Failure(NetworkFailure.Timeout)
         in 500..599 -> Result.Failure(NetworkFailure.ServerUnavailable)
         else -> Result.Failure(Failure.Unknown)

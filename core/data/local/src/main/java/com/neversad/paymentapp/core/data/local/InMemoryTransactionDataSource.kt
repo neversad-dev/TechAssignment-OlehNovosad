@@ -1,11 +1,9 @@
 package com.neversad.paymentapp.core.data.local
 
-import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.domain.common.Result
 import com.neversad.paymentapp.core.domain.transaction.TransactionDataSource
 import com.neversad.paymentapp.core.model.Transaction
 import jakarta.inject.Inject
-
 
 
 internal class InMemoryTransactionDataSource @Inject constructor() : TransactionDataSource {

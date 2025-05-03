@@ -1,6 +1,5 @@
 package com.neversad.paymentapp.core.data.remote
 
-import android.net.Network
 import com.neversad.paymentapp.core.domain.common.Failure
 
 sealed class NetworkFailure(override val message: String) : Failure(message) {

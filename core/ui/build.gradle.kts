@@ -1,5 +1,3 @@
-import com.neversad.paymentapp.build_logic.convention.implementation
-
 plugins {
     alias(libs.plugins.paymentapp.android.library)
     alias(libs.plugins.paymentapp.android.library.compose)

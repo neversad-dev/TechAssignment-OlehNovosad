@@ -1,6 +1,5 @@
 package com.neversad.paymentapp.feature.receipt
 
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions

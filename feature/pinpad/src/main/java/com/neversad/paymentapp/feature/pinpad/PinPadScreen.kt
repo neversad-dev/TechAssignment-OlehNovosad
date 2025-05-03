@@ -1,31 +1,23 @@
 package com.neversad.paymentapp.feature.pinpad
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.ui.components.LoadingScreen
 import com.neversad.paymentapp.core.ui.components.OrientationAware
 import com.neversad.paymentapp.core.ui.theme.PaymentAppTheme
-import com.neversad.paymentapp.feature.pinpad.components.AmountTextField
 import com.neversad.paymentapp.feature.pinpad.components.PinPadHeader
 import com.neversad.paymentapp.feature.pinpad.components.PinPadKeyboard
 

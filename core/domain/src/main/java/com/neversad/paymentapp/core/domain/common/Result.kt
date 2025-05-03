@@ -2,7 +2,8 @@ package com.neversad.paymentapp.core.domain.common
 
 sealed class Result<out T> {
     data class Success<T>(val data: T) : Result<T>()
-    data class Failure(val error: com.neversad.paymentapp.core.domain.common.Failure) : Result<Nothing>()
+    data class Failure(val error: com.neversad.paymentapp.core.domain.common.Failure) :
+        Result<Nothing>()
 
     inline fun <R> map(transform: (T) -> R): Result<R> {
         return when (this) {

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neversad.paymentapp.core.domain.common.Failure
 import com.neversad.paymentapp.core.domain.transaction.TransactionRepository
-import com.neversad.paymentapp.core.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,7 +29,7 @@ data class PinPadState(
 
 sealed interface PinPadAction {
     data class EnterDigit(val digit: String) : PinPadAction
-    data object ClearAmount: PinPadAction
+    data object ClearAmount : PinPadAction
     data object Submit : PinPadAction
     data object ClearFailure : PinPadAction
 }
@@ -96,7 +95,7 @@ class PinPadViewModel @Inject constructor(
                     .onSuccess { transaction ->
                         _effect.emit(PinPadEffect.NavigateToReceipt(transaction.id))
                         delay(1000)  // wait for transition to complete
-                        _state.update{ PinPadState() }
+                        _state.update { PinPadState() }
                     }
                     .onFailure { failure ->
                         _state.update {

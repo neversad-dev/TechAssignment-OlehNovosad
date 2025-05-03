@@ -29,7 +29,7 @@ A modular **Jetpack Compose** Android application that simulates a Point‑of�
 
 6. [Roadmap](#roadmap)
 
-7. [License](#License and Usage Notice)
+7. [License notice](#license-and-usage-notice)
 
 ---
 
